@@ -1,3 +1,4 @@
+import accountRouter from "./accountRouter.js"
 import userRouter from "./userRouter.js"
 import productRouter from "./productRouter.js"
 import productCategoryRouter from "./productCategoryRouter.js"
@@ -9,6 +10,7 @@ import orderRouter from "./orderRouter.js"
 import {errorHandler,notFound} from "../middlewares/errorHandle.js"
 
 const initRouters = (app) => {
+    app.use('/api/account', accountRouter)
     app.use('/api/users', userRouter)
     app.use('/api/products', productRouter)
     app.use('/api/productcategory', productCategoryRouter)
