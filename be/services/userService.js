@@ -1,9 +1,6 @@
 import User from "../models/User.js";
 import asyncHandler from "express-async-handler";
 import verifyToken from "../ultils/jwt.js";
-import jwt from "jsonwebtoken";
-import sendEmail from "../config/sendEmail.js";
-import crypto from "crypto";
 
 const registerService = asyncHandler(async (userData) => {
   const { email } = userData;

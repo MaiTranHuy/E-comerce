@@ -1,4 +1,3 @@
-import User from "../models/User.js";
 import asyncHandler from "express-async-handler";
 import userService from "../services/userService.js";
 import verifyToken from "../ultils/jwt.js";
