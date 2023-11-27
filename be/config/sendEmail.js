@@ -1,14 +1,15 @@
 import nodemailer from "nodemailer";
-import config from "../config/sendEmailConfig.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const createTransporter = () => {
   const transporter = nodemailer.createTransport({
-    host:config.sendEmailConfig.SEND_MAIL_HOST,
-    port: config.sendEmailConfig.SEND_MAIL_PORT,
+    host: process.env.SEND_MAIL_HOST,
+    port: process.env.SEND_MAIL_PORT,
     secure: false,
     auth: {
-      user: config.sendEmailConfig.SEND_MAIL_EMAIL,
-      pass: config.sendEmailConfig.SEND_MAIL_PASSWORD,
+      user: process.env.SEND_MAIL_EMAIL,
+      pass: process.env.SEND_MAIL_PASSWORD,
     },
   });
   return transporter;
@@ -17,7 +18,7 @@ const createTransporter = () => {
 const sendEmailService = async (to, emailSubject, emailBody) => {
   const transporter = createTransporter();
   const mainOptions = {
-    from: config.sendEmailConfig.SEND_MAIL_ADDRESS,
+    from: process.env.SEND_MAIL_ADDRESS,
     to: to,
     subject: emailSubject,
     text: "You received a message",

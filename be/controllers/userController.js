@@ -1,28 +1,29 @@
-import User from "../models/UserModel.js";
+import User from "../models/User.js";
 import asyncHandler from "express-async-handler";
-import verifyToken from "../middlewares/jwt.js";
+import verifyToken from "../ultils/jwt.js";
 import jwt from "jsonwebtoken";
-import sendEmail from "../ultils/sendEmail.js";
+import sendEmail from "../config/sendEmail.js";
 import crypto from "crypto";
 
-import userService from "../services/userService.js";
+const register = asyncHandler(async (req, res) => {
+  const { email, password, firstName, lastName, phoneNumber } = req.body;
+  if (!email || !password || !firstName || !phoneNumber || !lastName)
+    throw new Error("Missing input!");
 
-const registerController = asyncHandler(async (req, res) => {
-    const { email, password, firstName, lastName, phoneNumber } = req.body;
-    if (!email || !password || !firstName || !phoneNumber || !lastName) {
-      return res.status(400).json({
-        success: false,
-        message: "Missing inputs",
-      });
-    }
-    const result = userService.registerService(req.body);
+  const existingUser = await User.findOne({ email });
+  if (existingUser) throw new Error("User already exists!");
+  else {
+    const newUser = await User.create(req.body);
     return res.status(200).json({
-      success: result.success,
-      message: result.message,
+      success: newUser ? true : false,
+      message: newUser
+        ? "Register successfully! Please go to login!"
+        : "Something went wrong!",
     });
-  });
+  }
+});
 
-const loginController = asyncHandler(async (req, res) => {
+const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
     return res.status(400).json({
@@ -187,8 +188,6 @@ const updateUser = asyncHandler(async (req, res) => {
 
 const updateUserByAdmin = asyncHandler(async (req, res) => {
   const { uid } = req.params;
-  console.log(req.params);
-  console.log(req.body);
   if (!uid || Object.keys(req.body).length === 0)
     throw new Error("Missing input!");
   const updateUser = await User.findByIdAndUpdate(uid, req.body, {
@@ -200,9 +199,46 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
   });
 });
 
+const updateUserAddress = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  if (!req.body.address) throw new Error("Missing input!");
+  const updateUser = await User.findByIdAndUpdate(
+    _id,
+    { $push: { address: req.body.address } },
+    {
+      new: true,
+    }
+  ).select("-password -role -refreshToken");
+  return res.status(200).json({
+    success: updateUser ? true : false,
+    message: updateUser ? updateUser : "Update fail! ",
+  });
+});
+
+const updateCart = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { pid, quantity, color } = req.body;
+  if (!_id || !pid || !quantity || !color) throw new Error("Missing input!");
+  const user = await User.findById(_id).select("cart");
+  const alreadyProductIndex = user?.cart.findIndex(
+    (el) => el.product.toString() === pid && el.color === color
+  );
+  if (alreadyProductIndex !== -1) {
+    user.cart[alreadyProductIndex].quantity += quantity;
+  } else {
+    user.cart.push({ product: pid, quantity, color });
+  }
+  const response = await user.save();
+
+  return res.status(200).json({
+    success: response ? true : false,
+    message: response ? response : "Cart updated failed",
+  });
+});
+
 export default {
-    registerController,
-  loginController,
+  register,
+  login,
   getCurrent,
   refreshAccessToken,
   logout,
@@ -212,4 +248,6 @@ export default {
   deleteCurrent,
   updateUser,
   updateUserByAdmin,
+  updateUserAddress,
+  updateCart,
 };

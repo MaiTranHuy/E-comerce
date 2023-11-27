@@ -5,21 +5,22 @@ import jwt from "jsonwebtoken";
 import sendEmail from "../config/sendEmail.js";
 import crypto from "crypto";
 
-const registerService = asyncHandler(async ({ data }) => {
-  const { email } = data;
-  const existingUser = await User.findOne({ email });
-  if (existingUser)
-    return {
-      success: false,
-      message: "Email already registered!",
-    };
+const register = asyncHandler(async (req, res) => {
+  const { email, password, firstName, lastName, phoneNumber } = req.body;
+  if (!email || !password || !firstName || !phoneNumber || !lastName)
+    throw new Error("Missing input!");
 
-  const newUser = await User.create(data);
-  return {
-    success: true,
-    message: "Registered successfully",
-    data: newUser,
-  };
+  const existingUser = await User.findOne({ email });
+  if (existingUser) throw new Error("User already exists!");
+  else {
+    const newUser = await User.create(req.body);
+    return res.status(200).json({
+      success: newUser ? true : false,
+      message: newUser
+        ? "Register successfully! Please go to login!"
+        : "Something went wrong!",
+    });
+  }
 });
 
 const login = asyncHandler(async (req, res) => {
@@ -143,110 +144,11 @@ const resetPassword = asyncHandler(async (req, res) => {
   });
 });
 
-const getUsers = asyncHandler(async (req, res) => {
-  const listUsers = await User.find({}).select("-refreshToken -password -role");
-  return res.status(200).json({
-    success: listUsers ? true : false,
-    users: listUsers,
-  });
-});
-
-const getCurrent = asyncHandler(async (req, res) => {
-  const { _id } = req.user;
-  const existingUser = await User.findById(_id).select(
-    "-refreshToken -password -role"
-  );
-  return res.status(200).json({
-    success: existingUser ? true : false,
-    message: existingUser ? existingUser : "User not found! ",
-  });
-});
-
-const deleteCurrent = asyncHandler(async (req, res) => {
-  const { _id } = req.query;
-  if (!_id) throw new Error("Missing input!");
-  const deleteUser = await User.findByIdAndDelete(_id);
-  return res.status(200).json({
-    success: deleteUser ? true : false,
-    message: deleteUser ? "Delete success!" : "Delete fail! ",
-  });
-});
-
-const updateUser = asyncHandler(async (req, res) => {
-  const { _id } = req.user;
-  if (!_id || Object.keys(req.body).length === 0)
-    throw new Error("Missing input!");
-  const updateUser = await User.findByIdAndUpdate(_id, req.body, {
-    new: true,
-  }).select("-password -role");
-  return res.status(200).json({
-    success: updateUser ? true : false,
-    message: updateUser ? updateUser : "Update fail! ",
-  });
-});
-
-const updateUserByAdmin = asyncHandler(async (req, res) => {
-  const { uid } = req.params;
-  if (!uid || Object.keys(req.body).length === 0)
-    throw new Error("Missing input!");
-  const updateUser = await User.findByIdAndUpdate(uid, req.body, {
-    new: true,
-  }).select("-password -role");
-  return res.status(200).json({
-    success: updateUser ? true : false,
-    message: updateUser ? updateUser : "Update fail! ",
-  });
-});
-
-const updateUserAddress = asyncHandler(async (req, res) => {
-  const { _id } = req.user;
-  if (!req.body.address) throw new Error("Missing input!");
-  const updateUser = await User.findByIdAndUpdate(
-    _id,
-    { $push: { address: req.body.address } },
-    {
-      new: true,
-    }
-  ).select("-password -role -refreshToken");
-  return res.status(200).json({
-    success: updateUser ? true : false,
-    message: updateUser ? updateUser : "Update fail! ",
-  });
-});
-
-const updateCart = asyncHandler(async (req, res) => {
-  const { _id } = req.user;
-  const { pid, quantity, color } = req.body;
-  if (!_id || !pid || !quantity || !color) throw new Error("Missing input!");
-  const user = await User.findById(_id).select("cart");
-  const alreadyProductIndex = user?.cart.findIndex(
-    (el) => el.product.toString() === pid && el.color === color
-  );
-  if (alreadyProductIndex !== -1) {
-    user.cart[alreadyProductIndex].quantity += quantity;
-  } else {
-    user.cart.push({ product: pid, quantity, color });
-  }
-  const response = await user.save();
-
-  return res.status(200).json({
-    success: response ? true : false,
-    message: response ? response : "Cart updated failed",
-  });
-});
-
 export default {
-    registerService,
+  register,
   login,
-  getCurrent,
   refreshAccessToken,
   logout,
   forgotPassword,
   resetPassword,
-  getUsers,
-  deleteCurrent,
-  updateUser,
-  updateUserByAdmin,
-  updateUserAddress,
-  updateCart,
 };
