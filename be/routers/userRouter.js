@@ -3,18 +3,18 @@ import userController from "../controllers/userController.js";
 import verifyToken from "../middlewares/verifyToken.js";
 const router = express.Router();
 
-router.get('/current',verifyToken.verifyAccessToken,userController.getCurrent)
+router.get('/current',verifyToken.verifyAccessToken,userController.getCurrentUserController)
 
-router.put('/updateuser',verifyToken.verifyAccessToken,userController.updateUser)
+router.put('/updateuser',verifyToken.verifyAccessToken,userController.updateCurrentUserController)
 
-router.put('/address',verifyToken.verifyAccessToken,userController.updateUserAddress)
+router.put('/address',verifyToken.verifyAccessToken,userController.updateUserAddressController)
 
 router.put('/cart',verifyToken.verifyAccessToken,userController.updateCart)
 
-router.delete('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],userController.deleteCurrent)
+router.delete('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],userController.deleteUserController)
 
-router.put('/:uid',[verifyToken.verifyAccessToken,verifyToken.isAdmin],userController.updateUserByAdmin)
+router.put('/:uid',[verifyToken.verifyAccessToken,verifyToken.isAdmin],userController.updateUserByAdminController)
 
-router.get('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],userController.getUsers)
+router.get('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],userController.getAllUsersController)
 
 export default router

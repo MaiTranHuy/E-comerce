@@ -1,74 +1,124 @@
 import User from "../models/User.js";
+import userService from "../services/userService.js";
 import asyncHandler from "express-async-handler";
 
-const getUsers = asyncHandler(async (req, res) => {
-  const listUsers = await User.find({}).select("-refreshToken -password -role");
+const getAllUsersController = asyncHandler(async (req, res) => {
+  const listUsers = await userService.getAllUserService()
+  if (!listUsers.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: listUsers.message,
+    });
   return res.status(200).json({
-    success: listUsers ? true : false,
-    users: listUsers,
+    status: "OK",
+    message: "Get all users successfully!",
+    data: listUsers.data,
   });
 });
 
-const getCurrent = asyncHandler(async (req, res) => {
+const getCurrentUserController = asyncHandler(async (req, res) => {
   const { _id } = req.user;
-  const existingUser = await User.findById(_id).select(
-    "-refreshToken -password -role"
-  );
+  if (!_id)
+    return res.status(400).json({
+      status: "ERROR",
+      message: "Missing input!",
+    });
+  const user = await userService.getCurrentUserService(_id)
+  if (!user.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: user.message,
+    });
   return res.status(200).json({
-    success: existingUser ? true : false,
-    message: existingUser ? existingUser : "User not found! ",
+    status: "OK",
+    message: "Get current user successfully!",
+    data: user.data,
   });
 });
 
-const deleteCurrent = asyncHandler(async (req, res) => {
+const deleteUserController = asyncHandler(async (req, res) => {
   const { _id } = req.query;
-  if (!_id) throw new Error("Missing input!");
-  const deleteUser = await User.findByIdAndDelete(_id);
+  if (!_id)
+    return res.status(400).json({
+      status: "ERROR",
+      message: "Missing input!",
+    });
+  const user = await userService.deleteUserController(_id);
+  if (!user.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: user.message,
+    });
   return res.status(200).json({
-    success: deleteUser ? true : false,
-    message: deleteUser ? "Delete success!" : "Delete fail! ",
+    status: "OK",
+    message: "Delete current user successfully!",
+    data: user.data,
   });
 });
 
-const updateUser = asyncHandler(async (req, res) => {
+const updateCurrentUserController = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   if (!_id || Object.keys(req.body).length === 0)
-    throw new Error("Missing input!");
-  const updateUser = await User.findByIdAndUpdate(_id, req.body, {
-    new: true,
-  }).select("-password -role");
+    return res.status(400).json({
+      status: "ERROR",
+      message: "Missing input!",
+    });
+  const updateField = req.body
+  const userData = { _id, updateField };
+  const user = await userService.updateCurrentUserService(userData)
+  if (!user.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: user.message,
+    });
   return res.status(200).json({
-    success: updateUser ? true : false,
-    message: updateUser ? updateUser : "Update fail! ",
+    status: "OK",
+    message: "Update current user successfully!",
+    data: user.data,
   });
 });
 
-const updateUserByAdmin = asyncHandler(async (req, res) => {
+const updateUserByAdminController = asyncHandler(async (req, res) => {
   const { uid } = req.params;
   if (!uid || Object.keys(req.body).length === 0)
-    throw new Error("Missing input!");
-  const updateUser = await User.findByIdAndUpdate(uid, req.body, {
-    new: true,
-  }).select("-password -role");
+    return res.status(400).json({
+      status: "ERROR",
+      message: "Missing input!",
+    });
+  const updateField = req.body
+  const userData = { uid, updateField };
+  const user = await userService.updateUserByAdminService(userData)
+  if (!user.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: user.message,
+    });
   return res.status(200).json({
-    success: updateUser ? true : false,
-    message: updateUser ? updateUser : "Update fail! ",
+    status: "OK",
+    message: "Update current user successfully!",
+    data: user.data,
   });
 });
 
-const updateUserAddress = asyncHandler(async (req, res) => {
+const updateUserAddressController = asyncHandler(async (req, res) => {
   const { _id } = req.user;
-  if (!req.body.address) throw new Error("Missing input!");
-  const updateUser = await User.findByIdAndUpdate(
-    _id,
-    { $push: { address: req.body.address } },
-    {
-      new: true,
-    }
-  ).select("-password -role -refreshToken");
+  if (!_id || !req.body.address)
+    return res.status(400).json({
+      status: "ERROR",
+      message: "Missing input!",
+    });
+  const address = req.body.address
+  const userData = { _id, address };
+  const user = await userService.updateUserAddressService(userData)
+  if (!user.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: user.message,
+    });
   return res.status(200).json({
-    success: updateUser ? true : false,
-    message: updateUser ? updateUser : "Update fail! ",
+    status: "OK",
+    message: "Update address successfully!",
+    data: user.data,
   });
 });
 
@@ -94,11 +144,11 @@ const updateCart = asyncHandler(async (req, res) => {
 });
 
 export default {
-  getCurrent,
-  getUsers,
-  deleteCurrent,
-  updateUser,
-  updateUserByAdmin,
-  updateUserAddress,
+  getAllUsersController,
+  getCurrentUserController,
+  deleteUserController,
+  updateCurrentUserController,
+  updateUserByAdminController,
+  updateUserAddressController,
   updateCart,
 };

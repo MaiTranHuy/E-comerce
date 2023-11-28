@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import userService from "../services/userService.js";
+import accountService from "../services/accountService.js";
 import verifyToken from "../ultils/jwt.js";
 import jwt from "jsonwebtoken";
 import sendEmail from "../config/sendEmail.js";
@@ -12,7 +12,7 @@ const registerController = asyncHandler(async (req, res) => {
       status: "ERROR",
       message: "Missing input!",
     });
-  const newUser = await userService.registerService(req.body);
+  const newUser = await accountService.registerService(req.body);
   if (!newUser.success)
     return res.status(400).json({
       status: "ERROR",
@@ -32,7 +32,7 @@ const loginController = asyncHandler(async (req, res) => {
       status: "ERROR",
       message: "Missing input!",
     });
-  const user = await userService.loginService(req.body);
+  const user = await accountService.loginService(req.body);
 
   if (!user.success)
     return res.status(400).json({
@@ -65,7 +65,7 @@ const logoutController = asyncHandler(async (req, res) => {
       status: "ERROR",
       message: "Missing input!",
     });
-  const user = await userService.logoutService(cookie.refreshToken);
+  const user = await accountService.logoutService(cookie.refreshToken);
   if (!user.success)
     return res.status(400).json({
       status: "ERROR",
@@ -91,7 +91,7 @@ const refreshAccessTokenController = asyncHandler(async (req, res) => {
       message: "Missing input!",
     });
   const verify = jwt.verify(cookie.refreshToken, process.env.REFRESH_TOKEN);
-  const user = await userService.refreshAccessTokenService(verify._id);
+  const user = await accountService.refreshAccessTokenService(verify._id);
   if (!user.success)
     return res.status(400).json({
       status: "ERROR",
@@ -115,7 +115,7 @@ const forgotPasswordController = asyncHandler(async (req, res) => {
       status: "ERROR",
       message: "Missing input!",
     });
-  const user = await userService.forgotPasswordService(email);
+  const user = await accountService.forgotPasswordService(email);
   if (!user.success)
     return res.status(400).json({
       status: "ERROR",
@@ -149,7 +149,7 @@ const resetPasswordController = asyncHandler(async (req, res) => {
     .update(token)
     .digest("hex");
   const userData = { password, passwordResetToken };
-  const user = await userService.resetPasswordService(userData);
+  const user = await accountService.resetPasswordService(userData);
   if (!user.success)
     return res.status(400).json({
       status: "ERROR",
