@@ -1,40 +1,84 @@
-import ProductCategory from "../models/ProductCategory.js";
+import {productCategoryService} from "../services/indexService.js";
 import asyncHandler from "express-async-handler";
 
-const createProductCategory = asyncHandler(async (req, res) => {
-  if (Object.keys(req.body).length === 0) throw new Error("Missing input");
-    const newCategory = await ProductCategory.create(req.body)
-    return res.status(200).json({
-      success: newCategory ? true : false,
-      message: newCategory ? newCategory : "Create category failed!",
+const createProductCategoryController = asyncHandler(async (req, res) => {
+  if (Object.keys(req.body).length === 0)
+    return res.status(400).json({
+      status: "ERROR",
+      message: "Missing input!",
     });
+  const productCategory = await productCategoryService.createproductCategoryService(req.body)
+  if (!productCategory.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: productCategory.message,
+    });
+  return res.status(200).json({
+    status: "OK",
+    message: "Create product category successfully!",
+    data: productCategory.data,
   });
+});
 
-    const getAllProductCategory = asyncHandler(async (req, res) => {
-     const product = await ProductCategory.find().select('title');
-     return res.status(200).json({
-       success: product ? true : false,
-       message: product ? product : "Get all category failed!",
-     });
-   });
-
-   const updateProductCategory = asyncHandler(async (req, res) => {
-    const { pcid } = req.params;
-    const updatedProductCategory = await ProductCategory.findByIdAndUpdate(pcid, req.body, {
-      new: true,
+const getAllProductCategoryController = asyncHandler(async (req, res) => {
+  const productCategory = await productCategoryService.getAllproductCategoryService()
+  if (!productCategory.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: productCategory.message,
     });
-    return res.status(200).json({
-      success: updatedProductCategory ? true : false,
-      message: updatedProductCategory ? updatedProductCategory : "Update product category failed!",
-    });
+  return res.status(200).json({
+    status: "OK",
+    message: "Get all product category successfully!",
+    data: productCategory.data,
   });
+});
 
-  const deleteProductCategory = asyncHandler(async (req, res) => {
-    const { pcid } = req.params;
-    const deletedProductCategory = await ProductCategory.findByIdAndDelete(pcid);
-    return res.status(200).json({
-      success: deletedProductCategory ? true : false,
-      message: deletedProductCategory ? deletedProductCategory : "Delete product category failed!",
+const updateProductCategoryController = asyncHandler(async (req, res) => {
+  const { pcid } = req.params;
+  if (!pcid)
+    return res.status(400).json({
+      status: "ERROR",
+      message: "Missing input!",
     });
+  const updateField = req.body
+  const userData = { pcid, updateField };
+  const productCategory = await productCategoryService.updateproductCategoryService(userData)
+  if (!productCategory.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: productCategory.message,
+    });
+  return res.status(200).json({
+    status: "OK",
+    message: "Update product category successfully!",
+    data: productCategory.data,
   });
-  export default {createProductCategory,getAllProductCategory,updateProductCategory,deleteProductCategory};
+});
+
+const deleteProductCategoryController = asyncHandler(async (req, res) => {
+  const { pcid } = req.params;
+  if (!pcid)
+    return res.status(400).json({
+      status: "ERROR",
+      message: "Missing input!",
+    });
+  const productCategory = await productCategoryService.deleteproductCategoryService(pcid)
+  if (!productCategory.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: productCategory.message,
+    });
+  return res.status(200).json({
+    status: "OK",
+    message: "Delete product category successfully!",
+    data: productCategory.data,
+  });
+});
+
+export default {
+  createProductCategoryController,
+  getAllProductCategoryController,
+  updateProductCategoryController,
+  deleteProductCategoryController
+};

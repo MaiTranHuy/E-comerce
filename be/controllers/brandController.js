@@ -1,40 +1,84 @@
-import Brand from "../models/Brand.js";
+import {brandService} from "../services/indexService.js";
 import asyncHandler from "express-async-handler";
 
-const createBrand = asyncHandler(async (req, res) => {
-  if (Object.keys(req.body).length === 0) throw new Error("Missing input");
-  const newBrand = await Brand.create(req.body);
+const createBrandController = asyncHandler(async (req, res) => {
+  if (Object.keys(req.body).length === 0)
+    return res.status(400).json({
+      status: "ERROR",
+      message: "Missing input!",
+    });
+  const brand = await brandService.createbrandService(req.body)
+  if (!brand.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: brand.message,
+    });
   return res.status(200).json({
-    success: newBrand ? true : false,
-    message: newBrand ? newBrand : "Create brand failed!",
+    status: "OK",
+    message: "Create brand successfully!",
+    data: brand.data,
   });
 });
 
-const getAllBrand = asyncHandler(async (req, res) => {
-  const brand = await Brand.find().select("title");
+const getAllBrandController = asyncHandler(async (req, res) => {
+  const brand = await brandService.getAllbrandService()
+  if (!brand.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: brand.message,
+    });
   return res.status(200).json({
-    success: brand ? true : false,
-    message: brand ? brand : "Get all brand failed!",
+    status: "OK",
+    message: "Get all brand successfully!",
+    data: brand.data,
   });
 });
 
-const updateBrand = asyncHandler(async (req, res) => {
+const updateBrandController = asyncHandler(async (req, res) => {
   const { bid } = req.params;
-  const updatedBrand = await Brand.findByIdAndUpdate(bid, req.body, {
-    new: true,
-  });
+  if (!bid)
+    return res.status(400).json({
+      status: "ERROR",
+      message: "Missing input!",
+    });
+  const updateField = req.body
+  const userData = { bid, updateField };
+  const brand = await brandService.updatebrandService(userData)
+  if (!brand.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: brand.message,
+    });
   return res.status(200).json({
-    success: updatedBrand ? true : false,
-    message: updatedBrand ? updatedBrand : "Update brand failed!",
+    status: "OK",
+    message: "Update brand successfully!",
+    data: brand.data,
   });
 });
 
-const deleteBrand = asyncHandler(async (req, res) => {
+const deleteBrandController = asyncHandler(async (req, res) => {
   const { bid } = req.params;
-  const deletedBrand = await Brand.findByIdAndDelete(bid);
+  if (!bid)
+    return res.status(400).json({
+      status: "ERROR",
+      message: "Missing input!",
+    });
+  const brand = await brandService.deletebrandService(bid)
+  if (!brand.success)
+    return res.status(400).json({
+      status: "ERROR",
+      message: brand.message,
+    });
   return res.status(200).json({
-    success: deletedBrand ? true : false,
-    message: deletedBrand ? deletedBrand : "Delete brand failed!",
+    status: "OK",
+    message: "Delete brand successfully!",
+    data: brand.data,
   });
 });
-export default { createBrand, getAllBrand, updateBrand, deleteBrand };
+
+export default {
+  createBrandController,
+  getAllBrandController,
+  updateBrandController,
+  deleteBrandController
+};

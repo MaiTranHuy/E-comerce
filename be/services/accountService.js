@@ -119,9 +119,16 @@ const resetPasswordService = asyncHandler(async (userData) => {
   console.log(userData);
   const existingUser = await User.findOne({
     passwordResetToken: userData.passwordResetToken,
-    passwordResetExpires: { $gt: Date.now() },
   });
   if (!existingUser)
+    return {
+      success: false,
+      message: "User not found!",
+    };
+  const isTokenCorrect = await User.findOne({
+    passwordResetExpires: { $gt: Date.now() },
+  });
+  if (!isTokenCorrect)
     return {
       success: false,
       message: "Reset password token not correct!",

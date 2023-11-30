@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import accountService from "../services/accountService.js";
+import {accountService} from "../services/indexService.js";
 import verifyToken from "../ultils/jwt.js";
 import jwt from "jsonwebtoken";
 import sendEmail from "../config/sendEmail.js";
@@ -33,13 +33,11 @@ const loginController = asyncHandler(async (req, res) => {
       message: "Missing input!",
     });
   const user = await accountService.loginService(req.body);
-
   if (!user.success)
     return res.status(400).json({
       status: "ERROR",
       message: user.message,
     });
-
   const accessToken = user.accessToken;
   const refreshToken = user.refreshToken;
   res.cookie("refreshToken", user.refreshToken, {

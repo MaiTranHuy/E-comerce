@@ -29,6 +29,12 @@ const getCurrentUserService = asyncHandler(async (userData) => {
 });
 
 const deleteUserController = asyncHandler(async (userData) => {
+  const user = await User.findById(userData)
+  if (!user)
+    return {
+      success: false,
+      message: "User not found!",
+    };
   const deleteUser = await User.findByIdAndDelete(userData);
   if (!deleteUser)
     return {
@@ -42,6 +48,12 @@ const deleteUserController = asyncHandler(async (userData) => {
 });
 
 const updateCurrentUserService = asyncHandler(async (userData) => {
+  const user = await User.findById(userData._id)
+  if (!user)
+    return {
+      success: false,
+      message: "User not found!",
+    };
   const updateUser = await User.findByIdAndUpdate(userData._id, userData.updateField, {
     new: true,
   }).select("-password -role");
@@ -57,6 +69,12 @@ const updateCurrentUserService = asyncHandler(async (userData) => {
 });
 
 const updateUserByAdminService = asyncHandler(async (userData) => {
+  const existUser = await User.findById(userData.uid)
+  if (!existUser)
+    return {
+      success: false,
+      message: "User not found!",
+    };
   const user = await User.findByIdAndUpdate(userData.uid, userData.updateField, {
     new: true,
   }).select("-password -role");
@@ -72,9 +90,12 @@ const updateUserByAdminService = asyncHandler(async (userData) => {
 });
 
 const updateUserAddressService = asyncHandler(async (userData) => {
-  // const user = await User.findById(userData._id).select("-password -role -refreshToken")
-  // user.address.push(userData.address)
-  // await user.save()
+  const existUser = await User.findById(userData._id)
+  if (!existUser)
+    return {
+      success: false,
+      message: "User not found!",
+    };
   const user = await User.findByIdAndUpdate(
     userData._id,
     { $push: { address: userData.address } },
@@ -92,7 +113,6 @@ const updateUserAddressService = asyncHandler(async (userData) => {
     data: user,
   };
 });
-
 
 export default {
   getAllUserService,

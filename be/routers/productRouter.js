@@ -6,19 +6,19 @@ import uploadCloud from '../config/cloudinaryConfig.js'
 
 const router = express.Router();
 
-router.post('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],productController.createProduct)
+router.post('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],productController.createProductController)
 
-router.get('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],productController.getAllProduct)
+router.get('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],productController.getAllProductController)
 
-router.put('/ratings',verifyToken.verifyAccessToken,productController.ratingProduct)
+router.put('/ratings',verifyToken.verifyAccessToken,productController.ratingProductController)
 
-router.put('/uploadimage/:pid',verifyToken.verifyAccessToken,uploadCloud.array('images',10),productController.uploadImagesProduct)
+router.put('/uploadimage/:pid',verifyToken.verifyAccessToken,uploadCloud.array('images',10),productController.uploadImagesProductController)
 
-router.put('/:pid',[verifyToken.verifyAccessToken,verifyToken.isAdmin],productController.updateProduct)
+router.put('/:pid',[verifyToken.verifyAccessToken,verifyToken.isAdmin],productController.updateProductController)
 
-router.delete('/:pid',[verifyToken.verifyAccessToken,verifyToken.isAdmin],productController.deleteProduct)
+router.delete('/:pid',[verifyToken.verifyAccessToken,verifyToken.isAdmin],productController.deleteProductController)
 
-router.get('/:pid',productController.getProduct)
+router.get('/:pid',productController.getProductController)
 
 
 export default router

@@ -7,7 +7,7 @@ import couponRouter from "./couponRouter.js"
 import blogRouter from "./blogRouter.js"
 import blogCategoryRouter from "./blogCategoryRouter.js"
 import orderRouter from "./orderRouter.js"
-import {errorHandler,notFound} from "../middlewares/errorHandle.js"
+import { errorHandler, notFound } from "../middlewares/errorHandle.js"
 
 const initRouters = (app) => {
     app.use('/api/account', accountRouter)
@@ -19,7 +19,6 @@ const initRouters = (app) => {
     app.use('/api/blogs', blogRouter)
     app.use('/api/blogcategory', blogCategoryRouter)
     app.use('/api/order', orderRouter)
-
 
     app.use(notFound)
     app.use(errorHandler)

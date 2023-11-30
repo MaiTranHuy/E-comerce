@@ -6,22 +6,21 @@ import uploadCloud from '../config/cloudinaryConfig.js'
 
 const router = express.Router();
 
-router.post('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],blogController.createBlog)
+router.post('/', [verifyToken.verifyAccessToken, verifyToken.isAdmin], blogController.createBlogController)
 
-router.get('/',blogController.getAllBlog)
+router.get('/', blogController.getAllBlogController)
 
-router.get('/one/:bid',blogController.getBlog)
+router.get('/one/:bid', blogController.getBlogController)
 
-router.put('/update/:bid',[verifyToken.verifyAccessToken,verifyToken.isAdmin],blogController.updateBlog)
+router.put('/update/:bid', [verifyToken.verifyAccessToken, verifyToken.isAdmin], blogController.updateBlogController)
 
-router.put('/uploadimage/:bid',verifyToken.verifyAccessToken,uploadCloud.single('image'),blogController.uploadImageBlog)
+router.put('/uploadimage/:bid', verifyToken.verifyAccessToken, uploadCloud.single('image'), blogController.uploadImageBlogController)
 
+router.delete('/:bid', [verifyToken.verifyAccessToken, verifyToken.isAdmin], blogController.deleteBlogController)
 
-router.delete('/:bid',[verifyToken.verifyAccessToken,verifyToken.isAdmin],blogController.deleteBlog)
+router.put('/like/:bid', verifyToken.verifyAccessToken, blogController.likeBlogController)
 
-router.put('/like/:bid',verifyToken.verifyAccessToken,blogController.likeBlog)
-
-router.put('/dislike/:bid',verifyToken.verifyAccessToken,blogController.dislikeBlog)
+router.put('/dislike/:bid', verifyToken.verifyAccessToken, blogController.dislikeBlogController)
 
 
 

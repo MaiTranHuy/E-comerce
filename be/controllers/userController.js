@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import userService from "../services/userService.js";
+import {userService} from "../services/indexService.js";
 import asyncHandler from "express-async-handler";
 
 const getAllUsersController = asyncHandler(async (req, res) => {
