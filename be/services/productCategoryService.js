@@ -21,7 +21,7 @@ const createproductCategoryService = asyncHandler(async (userData) => {
 });
 
 const getAllproductCategoryService = asyncHandler(async () => {
-    const productCategory = await ProductCategory.find().select('title');
+    const productCategory = await ProductCategory.find().select('_id title');
     if (!productCategory)
         return {
             success: false,
