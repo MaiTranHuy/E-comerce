@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],productController.createProductController)
 
-router.get('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],productController.getAllProductController)
+router.get('/',productController.getAllProductController)
 
 router.put('/ratings',verifyToken.verifyAccessToken,productController.ratingProductController)
 

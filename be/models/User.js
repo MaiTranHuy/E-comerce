@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema(
     ],
     isBlocked: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     refreshToken: {
       type: String,
@@ -64,6 +64,12 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     passwordResetExpires: {
+      type: String,
+    },
+    verifyToken: {
+      type: String,
+    },
+    verifyExpires: {
       type: String,
     },
   },
@@ -92,6 +98,12 @@ userSchema.methods = {
       .digest("hex");
     this.passwordResetExpires = Date.now() + 15 * 60 * 1000;
     return resetToken;
+  },
+  createVerifyToken: async function () {
+    const token = crypto.randomBytes(32).toString("hex");
+    this.verifyToken = crypto.createHash("sha256").update(token).digest("hex");
+    this.verifyExpires = Date.now() + 15 * 60 * 1000;
+    return token;
   },
 };
 

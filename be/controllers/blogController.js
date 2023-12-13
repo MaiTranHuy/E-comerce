@@ -7,7 +7,7 @@ const createBlogController = asyncHandler(async (req, res) => {
   const { title, description, category } = req.body;
   if (!title || !description || !category || !_id)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const updateField = req.body
@@ -15,11 +15,11 @@ const createBlogController = asyncHandler(async (req, res) => {
   const newBlog = await blogService.createBlogService(userData);
   if (!newBlog.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: newBlog.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Create blog successfully!",
     data: newBlog.data,
   });
@@ -30,11 +30,11 @@ const getAllBlogController = asyncHandler(async (req, res) => {
   const blog = await blogService.getAllBlogService();
   if (!blog.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: blog.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Get all blog successfully!",
     data: blog.data,
   });
@@ -45,7 +45,7 @@ const updateBlogController = asyncHandler(async (req, res) => {
   const { bid } = req.params;
   if (!bid || Object.keys(req.body).length === 0)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const updateField = req.body
@@ -53,11 +53,11 @@ const updateBlogController = asyncHandler(async (req, res) => {
   const blog = await blogService.updateBlogService(userData);
   if (!blog.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: blog.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Update blog successfully!",
     data: blog.data,
   });
@@ -67,17 +67,17 @@ const deleteBlogController = asyncHandler(async (req, res) => {
   const { bid } = req.params;
   if (!bid)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const blog = await blogService.deleteBlogService(bid);
   if (!blog.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: blog.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Delete blog successfully!",
     data: blog.data,
   });
@@ -88,18 +88,18 @@ const likeBlogController = asyncHandler(async (req, res) => {
   const { bid } = req.params;
   if (!bid || !_id)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const userData = { bid, _id };
   const blog = await blogService.likeBlogService(userData);
   if (!blog.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: blog.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Like blog successfully!",
     data: blog.data,
   });
@@ -110,18 +110,18 @@ const dislikeBlogController = asyncHandler(async (req, res) => {
   const { bid } = req.params;
   if (!bid || !_id)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const userData = { bid, _id };
   const blog = await blogService.dislikeBlogService(userData);
   if (!blog.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: blog.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Dislike blog successfully!",
     data: blog.data,
   });
@@ -131,17 +131,17 @@ const getBlogController = asyncHandler(async (req, res) => {
   const { bid } = req.params;
   if (!bid)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const blog = await blogService.getBlogService(bid);
   if (!blog.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: blog.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Get blog successfully!",
     data: blog.data,
   });
@@ -151,7 +151,7 @@ const uploadImageBlogController = asyncHandler(async (req, res) => {
   const { bid } = req.params;
   if (!req.file || !bid)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const updateFile = req.file
@@ -159,11 +159,11 @@ const uploadImageBlogController = asyncHandler(async (req, res) => {
   const blog = await blogService.uploadImageBlogService(userData);
   if (!blog.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: blog.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Get blog successfully!",
     data: blog.data,
   });

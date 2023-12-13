@@ -7,7 +7,7 @@ const createOrderController = asyncHandler(async (req, res) => {
   const { _id } = req.user
   if (!_id)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const data = req.body
@@ -15,11 +15,11 @@ const createOrderController = asyncHandler(async (req, res) => {
   const order = await orderService.createOrderService(userData);
   if (!order.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: order.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Create order successfully!",
     data: order.data
   });
@@ -30,18 +30,18 @@ const updateStatusController = asyncHandler(async (req, res) => {
   const { status } = req.body
   if (!status || !oid)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const userData = { oid, status };
   const order = await orderService.updateStatusService(userData);
   if (!order.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: order.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Update status order successfully!",
     data: order.data
   });
@@ -51,17 +51,17 @@ const deleteOrderController = asyncHandler(async (req, res) => {
   const { oid } = req.params
   if (!oid)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const order = await orderService.deleteOrderService(oid);
   if (!order.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: order.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Delete order successfully!",
     data: order.data
   });
@@ -71,17 +71,17 @@ const getUserOrderController = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   if (!_id)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const order = await orderService.getUserOrderService(_id);
   if (!order.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: order.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Get user order successfully!",
     data: order.data
   });
@@ -91,17 +91,17 @@ const getOrderController = asyncHandler(async (req, res) => {
   const { oid } = req.params
   if (oid)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const order = await orderService.getOrderService(oid);
   if (!order.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: order.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Get order successfully!",
     data: order.data
   });
@@ -111,11 +111,11 @@ const getAllOrderController = asyncHandler(async (req, res) => {
   const order = await orderService.getAllOrderService();
   if (!order.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: order.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Get all order successfully!",
     data: order.data
   });

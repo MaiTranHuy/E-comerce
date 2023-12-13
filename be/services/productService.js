@@ -41,7 +41,7 @@ const getAllProductService = asyncHandler(async (userData) => {
     const { optionQuery, formatQueries } = userData
     if (formatQueries?.title)
         formatQueries.title = { $regex: `.*${formatQueries.title}.*`, $options: "i" };
-    let queryCommand = Product.find(formatQueries);
+    let queryCommand = Product.find(formatQueries).populate('category brand','title');
     if (optionQuery.sort) {
         const sortBy = optionQuery.sort.split(",").join(" ");
         queryCommand = queryCommand.sort(sortBy);

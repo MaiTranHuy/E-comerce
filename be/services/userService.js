@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import asyncHandler from "express-async-handler";
-import verifyToken from "../ultils/jwt.js";
+import verifyToken from "../utils/jwt.js";
 
 const getAllUserService = asyncHandler(async () => {
   const listUsers = await User.find({}).select("-refreshToken -password -role");

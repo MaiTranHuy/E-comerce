@@ -6,11 +6,11 @@ const getAllUsersController = asyncHandler(async (req, res) => {
   const listUsers = await userService.getAllUserService()
   if (!listUsers.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: listUsers.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Get all users successfully!",
     data: listUsers.data,
   });
@@ -20,17 +20,17 @@ const getCurrentUserController = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   if (!_id)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const user = await userService.getCurrentUserService(_id)
   if (!user.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: user.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Get current user successfully!",
     data: user.data,
   });
@@ -40,17 +40,17 @@ const deleteUserController = asyncHandler(async (req, res) => {
   const { _id } = req.query;
   if (!_id)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const user = await userService.deleteUserController(_id);
   if (!user.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: user.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Delete current user successfully!",
     data: user.data,
   });
@@ -60,7 +60,7 @@ const updateCurrentUserController = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   if (!_id || Object.keys(req.body).length === 0)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const updateField = req.body
@@ -68,11 +68,11 @@ const updateCurrentUserController = asyncHandler(async (req, res) => {
   const user = await userService.updateCurrentUserService(userData)
   if (!user.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: user.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Update current user successfully!",
     data: user.data,
   });
@@ -82,7 +82,7 @@ const updateUserByAdminController = asyncHandler(async (req, res) => {
   const { uid } = req.params;
   if (!uid || Object.keys(req.body).length === 0)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const updateField = req.body
@@ -90,11 +90,11 @@ const updateUserByAdminController = asyncHandler(async (req, res) => {
   const user = await userService.updateUserByAdminService(userData)
   if (!user.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: user.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Update current user successfully!",
     data: user.data,
   });
@@ -104,7 +104,7 @@ const updateUserAddressController = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   if (!_id || !req.body.address)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const address = req.body.address
@@ -112,11 +112,11 @@ const updateUserAddressController = asyncHandler(async (req, res) => {
   const user = await userService.updateUserAddressService(userData)
   if (!user.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: user.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Update address successfully!",
     data: user.data,
   });

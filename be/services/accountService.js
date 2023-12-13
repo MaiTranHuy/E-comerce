@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import asyncHandler from "express-async-handler";
-import verifyToken from "../ultils/jwt.js";
+import verifyToken from "../utils/jwt.js";
 
 const registerService = asyncHandler(async (userData) => {
   const { email } = userData;
@@ -11,6 +11,13 @@ const registerService = asyncHandler(async (userData) => {
       message: "Email already registered!",
     };
   const newUser = await User.create(userData);
+  const verifyToken = await newUser.createVerifyToken();
+  await newUser.save();
+  if (!verifyToken)
+    return {
+      success: false,
+      message: "Create reset password token failed!",
+    };
   if (!newUser)
     return {
       success: false,
@@ -18,7 +25,36 @@ const registerService = asyncHandler(async (userData) => {
     };
   return {
     success: true,
+    token: verifyToken,
     data: newUser,
+  };
+});
+
+const verifyEmailService = asyncHandler(async (userData) => {
+  const { verifyToken } = userData;
+  const existingUser = await User.findOne({
+    verifyToken: verifyToken,
+  });
+  if (!existingUser)
+    return {
+      success: false,
+      message: "User not found!",
+    };
+  const isTokenCorrect = await User.findOne({
+    verifyExpires: { $gt: Date.now() },
+  });
+  if (!isTokenCorrect)
+    return {
+      success: false,
+      message: "Verify token expired time!",
+    };
+  existingUser.isBlocked = false;
+  existingUser.verifyToken = undefined;
+  existingUser.verifyExpires = undefined;
+  await existingUser.save();
+  return {
+    success: true,
+    data: existingUser,
   };
 });
 
@@ -42,7 +78,21 @@ const loginService = asyncHandler(async (userData) => {
       success: false,
       message: "Password is not correct!",
     };
-
+  if (existingUser.isBlocked) {
+    const verifyToken = await existingUser.createVerifyToken();
+    await existingUser.save();
+    if (!verifyToken)
+      return {
+        success: false,
+        message: "Create reset password token failed!",
+      };
+    return {
+      success: false,
+      message: "Account need to verify!",
+      data: existingUser,
+      token: verifyToken,
+    };
+  }
   const accessToken = await verifyToken.generalAccessToken(
     existingUser._id,
     existingUser.role
@@ -116,7 +166,6 @@ const forgotPasswordService = asyncHandler(async (userData) => {
 });
 
 const resetPasswordService = asyncHandler(async (userData) => {
-  console.log(userData);
   const existingUser = await User.findOne({
     passwordResetToken: userData.passwordResetToken,
   });
@@ -146,6 +195,7 @@ const resetPasswordService = asyncHandler(async (userData) => {
 
 export default {
   registerService,
+  verifyEmailService,
   loginService,
   refreshAccessTokenService,
   logoutService,

@@ -7,17 +7,17 @@ const createProductController = asyncHandler(async (req, res) => {
   const { title, description, price, brand, category } = req.body;
   if (!title || !description || !price || !brand || !category)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const newProduct = await productService.createProductService(req.body);
   if (!newProduct.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: newProduct.message,
     });
   return res.status(201).json({
-    status: "OK",
+    success: true,
     message: "Create product successfully!",
     data: newProduct,
   });
@@ -27,17 +27,17 @@ const getProductController = asyncHandler(async (req, res) => {
   const { pid } = req.params;
   if (!pid)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const product = await productService.getProductService(pid)
   if (!product.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: product.message,
     });
   return res.status(201).json({
-    status: "OK",
+    success: true,
     message: "Get product successfully!",
     data: product,
   });
@@ -56,11 +56,11 @@ const getAllProductController = asyncHandler(async (req, res) => {
   const product = await productService.getAllProductService(userData)
   if (!product.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: product.message,
     });
   return res.status(201).json({
-    status: "OK",
+    success: true,
     message: "Get products successfully!",
     data: product,
   });
@@ -70,7 +70,7 @@ const updateProductController = asyncHandler(async (req, res) => {
   const { pid } = req.params;
   if (!pid || Object.keys(req.body).length === 0)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   if (req.body.title)
@@ -80,11 +80,11 @@ const updateProductController = asyncHandler(async (req, res) => {
   const product = await productService.updateProductService(userData)
   if (!product.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: product.message,
     });
   return res.status(200).json({
-    status: "OK",
+    success: true,
     message: "Update product successfully!",
     data: product,
   });
@@ -94,17 +94,17 @@ const deleteProductController = asyncHandler(async (req, res) => {
   const { pid } = req.params;
   if (!pid)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const product = await productService.deleteProductService(pid)
   if (!product.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: product.message,
     });
   return res.status(201).json({
-    status: "OK",
+    success: true,
     message: "Delete product successfully!",
     data: product,
   });
@@ -115,7 +115,7 @@ const ratingProductController = asyncHandler(async (req, res) => {
   const { star, pid } = req.body;
   if (!_id || !star || !pid)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const updateField = req.body
@@ -123,11 +123,11 @@ const ratingProductController = asyncHandler(async (req, res) => {
   const product = await productService.ratingProductService(userData);
   if (!product.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: product.message,
     });
   return res.status(201).json({
-    status: "OK",
+    success: true,
     message: "Update product successfully!",
     data: product,
   });
@@ -137,7 +137,7 @@ const uploadImagesProductController = asyncHandler(async (req, res) => {
   const { pid } = req.params;
   if (!pid || !req.files)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: "Missing input!",
     });
   const updateField = req.files
@@ -145,11 +145,11 @@ const uploadImagesProductController = asyncHandler(async (req, res) => {
   const product = await productService.uploadImagesProductService(userData);
   if (!product.success)
     return res.status(400).json({
-      status: "ERROR",
+      success: false,
       message: product.message,
     });
   return res.status(201).json({
-    status: "OK",
+    success: true,
     message: "Update product successfully!",
     data: product,
   });

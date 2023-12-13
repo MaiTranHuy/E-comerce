@@ -2,16 +2,18 @@ import express from "express";
 import accountController from "../controllers/accountController.js";
 const router = express.Router();
 
-router.post('/register',accountController.registerController)
+router.post("/register", accountController.registerController);
 
-router.post('/login',accountController.loginController)
+router.get("/verify/:userVerifyResetToken", accountController.verifyEmailController);
 
-router.post('/logout',accountController.logoutController)
+router.post("/login", accountController.loginController);
 
-router.post('/refreshtoken',accountController.refreshAccessTokenController)
+router.post("/logout", accountController.logoutController);
 
-router.get('/forgotpassword',accountController.forgotPasswordController)
+router.post("/refreshtoken", accountController.refreshAccessTokenController);
 
-router.put('/resetpassword',accountController.resetPasswordController)
+router.get("/forgotpassword", accountController.forgotPasswordController);
 
-export default router
+router.put("/resetpassword", accountController.resetPasswordController);
+
+export default router;
