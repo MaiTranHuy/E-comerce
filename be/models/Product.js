@@ -14,10 +14,11 @@ const productSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
     },
-    description: {
-      type: String,
-      required: true,
-    },
+    description: [
+      {
+        type: Array,
+      },
+    ],
     price: {
       type: Number,
       required: true,
@@ -45,10 +46,12 @@ const productSchema = new mongoose.Schema(
         type: Array,
       },
     ],
-    color: {
-      type: String,
-      enum: ["Black", "Red", "Green", "Yellow"],
-    },
+    color: [
+      {
+        type: String,
+        enum: ["Black", "Red", "Green", "Yellow"],
+      },
+    ],
     ratings: [
       {
         star: { type: Number },

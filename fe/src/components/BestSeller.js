@@ -17,7 +17,6 @@ const BestSeller = () => {
   const { newProducts } = useSelector((state) => state.product)
   const fetchProducts = async () => {
     const response = await apiGetProducts({ sort: '-sold', limit: 10 })
-
     if (response.success) {
       setBestSellers(response.data.data.product)
       setProducts(response.data.data.product)
@@ -46,7 +45,7 @@ const BestSeller = () => {
         ))}
       </div>
       <div className="mt-4 mx-[-10px] pt-8 border-t-2 border-main">
-        <CustomSlider products={products} activeTab={activeTab} />
+        <CustomSlider products={products} activeTab={activeTab} normal={false} />
       </div>
       <div className="w-full flex gap-4 mt-4">
         <img

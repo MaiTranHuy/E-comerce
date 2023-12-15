@@ -12,42 +12,49 @@ const registerController = asyncHandler(async (req, res) => {
       success: false,
       message: "Missing input!",
     });
-  const newUser = await accountService.registerService(req.body);
+  const newUser = await accountService.registerService({ email, phoneNumber });
   if (!newUser.success)
     return res.status(400).json({
       success: false,
       message: newUser.message,
     });
+  const token = crypto.randomBytes(32).toString("hex");
+  res.cookie(
+    "dataRegister",
+    { ...req.body, token },
+    {
+      maxAge: 15 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    }
+  );
   const emailSubject = "Xac minh tai khoan";
   const emailHtml = `
     Xin vui lòng click vào link dưới đây để xác nhận Email của bạn. Link này sẽ hết hạn sau 15 phút kể từ bây giờ.
-    <a href="${process.env.URL_SERVER}/api/account/verify/${newUser.token}">Click here!</a>
+    <a href="${process.env.URL_SERVER}/api/account/finalregister/${token}">Click here!</a>
     `;
-  await sendEmail.sendEmailService(newUser.data.email, emailSubject, emailHtml);
-  return res.status(201).json({
+  await sendEmail.sendEmailService(email, emailSubject, emailHtml);
+  return res.status(200).json({
     success: true,
-    message: "Register successfully! Check your email to verify your account!",
-    data: newUser,
+    message: "Please check your email to verify your account!",
   });
 });
 
-const verifyEmailController = asyncHandler(async (req, res) => {
-  const { userVerifyResetToken } = req.params;
-  const verifyToken = crypto
-    .createHash("sha256")
-    .update(userVerifyResetToken)
-    .digest("hex");
-  const userData = { verifyToken };
-  const verify = await accountService.verifyEmailService(userData);
-  if (!verify.success)
-    return res.status(400).json({
-      success: false,
-      message: verify.message,
-    });
-  return res.status(201).json({
-    success: true,
-    message: "Verify successfully! Please go to login!",
-  });
+const finalRegisterController = asyncHandler(async (req, res) => {
+  const cookie = req.cookies;
+  const { token } = req.params;
+  const { email, password, firstName, lastName, phoneNumber } =
+    cookie.dataRegister;
+  const userData = { email, password, firstName, lastName, phoneNumber };
+  if (!cookie || cookie?.dataRegister?.token !== token) {
+    res.clearCookie("dataRegister");
+    return res.redirect(`${process.env.URL_CLIENT}/finalregister/failed`);
+  }
+  const newUser = await accountService.finalRegisterService(userData);
+  res.clearCookie("dataRegister");
+  if (!newUser.success) {
+    return res.redirect(`${process.env.URL_CLIENT}/finalregister/failed`);
+  }
+  return res.redirect(`${process.env.URL_CLIENT}/finalregister/success`);
 });
 
 const loginController = asyncHandler(async (req, res) => {
@@ -59,18 +66,6 @@ const loginController = asyncHandler(async (req, res) => {
     });
   const user = await accountService.loginService(req.body);
   if (!user.success) {
-    if (user.message === "Account need to verify!") {
-      const emailSubject = "Xac minh tai khoan";
-      const emailHtml = `
-        Xin vui lòng click vào link dưới đây để xác nhận Email của bạn. Link này sẽ hết hạn sau 15 phút kể từ bây giờ.
-        <a href="${process.env.URL_SERVER}/api/account/verify/${user.token}">Click here!</a>
-        `;
-      await sendEmail.sendEmailService(email, emailSubject, emailHtml);
-      return res.status(400).json({
-        success: false,
-        message: user.message,
-      });
-    }
     return res.status(400).json({
       success: false,
       message: user.message,
@@ -145,7 +140,7 @@ const refreshAccessTokenController = asyncHandler(async (req, res) => {
 });
 
 const forgotPasswordController = asyncHandler(async (req, res) => {
-  const email = req.query;
+  const email = req.body;
   if (!email)
     return res.status(400).json({
       success: false,
@@ -160,13 +155,9 @@ const forgotPasswordController = asyncHandler(async (req, res) => {
   const emailSubject = "You forgot your password";
   const emailHtml = `
   Xin vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn. Link này sẽ hết hạn sau 15 phút kể từ bây giờ. 
-  <a href="${process.env.URL_SERVER}/api/account/resetPassword/${user.data.token}">Click here!</a>
+  <a href="${process.env.URL_CLIENT}/resetpassword/${user.data.token}">Click here!</a>
   `;
-  const send = await sendEmail.sendEmailService(
-    user.data.email,
-    emailSubject,
-    emailHtml
-  );
+  const send = await sendEmail.sendEmailService(user.data.email, emailSubject, emailHtml);
   return res.status(200).json({
     success: true,
     data: send,
@@ -199,7 +190,7 @@ const resetPasswordController = asyncHandler(async (req, res) => {
 
 export default {
   registerController,
-  verifyEmailController,
+  finalRegisterController,
   loginController,
   refreshAccessTokenController,
   logoutController,

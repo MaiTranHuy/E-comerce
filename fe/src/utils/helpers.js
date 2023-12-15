@@ -7,6 +7,7 @@ export const createSlug = (string) =>
     .replace(/[\u0300-\u036f]/g, '')
     .split(' ')
     .join('-')
+    
 export const formatMoney = (number) =>
   Number(number?.toFixed(1)).toLocaleString()
 
@@ -20,6 +21,19 @@ export const renderStars = (number, size = 16) => {
     stars.push(<AiFillStar size={size} color="orange" />)
   for (let i = 5; i > +roundedNumber; i--)
     stars.push(<AiOutlineStar size={size} color="orange" />)
-
   return stars
+}
+
+export const validate = (payload, setInvalidFields) => {
+  let invalids = 0
+  const formatPayload = Object.entries(payload)
+  for (let arr of formatPayload) {
+    if (arr[1].trim() === '') invalids++
+    setInvalidFields((prev) => [
+      ...prev,
+      { name: arr[0], mes: 'Required field!' }
+    ])
+  }
+
+  return invalids
 }

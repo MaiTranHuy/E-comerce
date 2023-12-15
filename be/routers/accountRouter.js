@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.post("/register", accountController.registerController);
 
-router.get("/verify/:userVerifyResetToken", accountController.verifyEmailController);
+router.get("/finalregister/:token", accountController.finalRegisterController);
 
 router.post("/login", accountController.loginController);
 
@@ -12,7 +12,7 @@ router.post("/logout", accountController.logoutController);
 
 router.post("/refreshtoken", accountController.refreshAccessTokenController);
 
-router.get("/forgotpassword", accountController.forgotPasswordController);
+router.post("/forgotpassword", accountController.forgotPasswordController);
 
 router.put("/resetpassword", accountController.resetPasswordController);
 

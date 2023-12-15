@@ -3,21 +3,31 @@ import asyncHandler from "express-async-handler";
 import verifyToken from "../utils/jwt.js";
 
 const registerService = asyncHandler(async (userData) => {
-  const { email } = userData;
-  const existingUser = await User.findOne({ email });
-  if (existingUser)
-    return {
-      success: false,
-      message: "Email already registered!",
-    };
+  const { email, phoneNumber } = userData;
+  const existingUser = await User.findOne({
+    $or: [{ email }, { phoneNumber }],
+  });
+  if (existingUser) {
+    if (existingUser.email === email) {
+      return {
+        success: false,
+        message: "Email already registered!",
+      };
+    } else {
+      return {
+        success: false,
+        message: "Phone number registered!",
+      };
+    }
+  }
+
+  return {
+    success: true,
+  };
+});
+
+const finalRegisterService = asyncHandler(async (userData) => {
   const newUser = await User.create(userData);
-  const verifyToken = await newUser.createVerifyToken();
-  await newUser.save();
-  if (!verifyToken)
-    return {
-      success: false,
-      message: "Create reset password token failed!",
-    };
   if (!newUser)
     return {
       success: false,
@@ -25,36 +35,7 @@ const registerService = asyncHandler(async (userData) => {
     };
   return {
     success: true,
-    token: verifyToken,
     data: newUser,
-  };
-});
-
-const verifyEmailService = asyncHandler(async (userData) => {
-  const { verifyToken } = userData;
-  const existingUser = await User.findOne({
-    verifyToken: verifyToken,
-  });
-  if (!existingUser)
-    return {
-      success: false,
-      message: "User not found!",
-    };
-  const isTokenCorrect = await User.findOne({
-    verifyExpires: { $gt: Date.now() },
-  });
-  if (!isTokenCorrect)
-    return {
-      success: false,
-      message: "Verify token expired time!",
-    };
-  existingUser.isBlocked = false;
-  existingUser.verifyToken = undefined;
-  existingUser.verifyExpires = undefined;
-  await existingUser.save();
-  return {
-    success: true,
-    data: existingUser,
   };
 });
 
@@ -195,7 +176,7 @@ const resetPasswordService = asyncHandler(async (userData) => {
 
 export default {
   registerService,
-  verifyEmailService,
+  finalRegisterService,
   loginService,
   refreshAccessTokenService,
   logoutService,

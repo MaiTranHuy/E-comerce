@@ -4,7 +4,8 @@ export const apiRegister = (data) =>
   axios({
     url: '/account/register',
     method: 'post',
-    data
+    data,
+    withCredentials:true
   })
 
   
@@ -15,9 +16,23 @@ axios({
   data
 })
 
-  
-export const apiVerify = (userVerifyResetToken) =>
+export const apiForgotPassword = (data) =>
 axios({
-  url: `/account/verify/${userVerifyResetToken}`,
+  url: '/account/forgotpassword',
+  method: 'post',
+  data
+})
+
+export const apiResetPassword = (data) =>
+axios({
+  url: '/account/resetpassword',
+  method: 'put',
+  data
+})
+
+export const apiGetCurrent = () =>
+axios({
+  url: '/users/current',
   method: 'get',
+  
 })
