@@ -40,10 +40,10 @@ const SearchItem = ({
     const queries = {}
     for (let i of param) queries[i[0]] = i[1]
     if (selected.length > 0) {
-      queries.category = category
       queries.color = selected.join(',')
-      queries.page = 1
     } else delete queries.color
+    queries.category = category
+    queries.page = 1
     navigate({
       pathname: `/${category}`,
       search: createSearchParams(queries).toString()
@@ -78,6 +78,8 @@ const SearchItem = ({
     else delete queries.from
     if (Number(price.to) > 0) queries.to = price.to
     else delete queries.to
+    queries.category = category
+    queries.page = 1
     navigate({
       pathname: `/${category}`,
       search: createSearchParams(queries).toString()
