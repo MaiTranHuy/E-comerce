@@ -18,6 +18,7 @@ import {
   AiOutlineDown
 } from 'react-icons/ai'
 
+import {BiDotsHorizontalRounded} from 'react-icons/bi'
 const icons = {
   RiPhoneFill,
   MdEmail,
@@ -35,7 +36,8 @@ const icons = {
   RiTruckFill,
   FaTty,
   AiFillGift,
-  AiOutlineDown
+  AiOutlineDown,
+  BiDotsHorizontalRounded
 }
 
 export default icons

@@ -10,7 +10,8 @@ module.exports = {
         main: '1220px'
       },
       backgroundColor: {
-        main: 'red'
+        main: 'red',
+        overlay: 'rgba(0, 0, 0, 0.5)',
       },
       colors: {
         main: 'red'
@@ -52,5 +53,6 @@ module.exports = {
       }
     }
   },
-  plugins: ['@tailwindcss/line-clamp']
+  plugins: ['@tailwindcss/line-clamp', require('@tailwindcss/forms')],
+
 }

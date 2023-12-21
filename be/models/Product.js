@@ -49,7 +49,7 @@ const productSchema = new mongoose.Schema(
     color: [
       {
         type: String,
-        enum: ["Black", "Red", "Green", "Yellow"],
+        enum: ["Black", "Red", "Green", "Yellow", "Gray", "Pink"],
       },
     ],
     ratings: [
@@ -57,6 +57,7 @@ const productSchema = new mongoose.Schema(
         star: { type: Number },
         postedBy: { type: mongoose.Types.ObjectId, ref: "User" },
         comment: { type: String },
+        updatedAt: {type: Date},
       },
     ],
     totalRatings: {

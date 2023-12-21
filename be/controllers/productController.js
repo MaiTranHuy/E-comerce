@@ -44,7 +44,7 @@ const getProductController = asyncHandler(async (req, res) => {
 });
 
 const getAllProductController = asyncHandler(async (req, res) => {
-  const { page = 1, sort, limit = 5, fields, ...inputQueries } = req.query;
+  const { page = 1, sort, limit, fields, ...inputQueries } = req.query;
   const optionQuery = { page, sort, limit, fields }
   let queryString = JSON.stringify(inputQueries);
   queryString = queryString.replace(

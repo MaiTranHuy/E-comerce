@@ -5,7 +5,6 @@ import labelBlue from '../assets/label-blue.webp'
 import SelectOption from './SelectOption'
 import icons from '../utils/icons'
 import { Link } from 'react-router-dom'
-import path from '../utils/path'
 
 const { AiFillEye, AiOutlineMenu, BsFillSuitHeartFill } = icons
 
@@ -50,7 +49,7 @@ const Product = ({ productData, isNew, normal = true }) => {
           )}
           {!normal && (
             <span className="absolute font-bold top-[13px] left-[10px] text-white">
-              {isNew ? 'New' : 'Best'}
+              {isNew ? 'Best' : 'New'}
             </span>
           )}
         </div>

@@ -1,16 +1,21 @@
 import React, { memo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import path from '../utils/path'
-import { getCurrent } from '../store/user/asyncAction'
+import path from '../../utils/path'
+import { getCurrent } from '../../store/user/asyncAction'
 import { useDispatch, useSelector } from 'react-redux'
 import { AiOutlineLogout } from 'react-icons/ai'
-import { logout } from '../store/user/userSlice'
+import { logout } from '../../store/user/userSlice'
 
 const TopHeader = () => {
   const dispatch = useDispatch()
   const { isLoggedIn, current } = useSelector((state) => state.user)
   useEffect(() => {
-    if (isLoggedIn) dispatch(getCurrent())
+    const setTimeoutId = setTimeout(() => {
+      if (isLoggedIn) dispatch(getCurrent())
+    },300)
+  return () => {
+    clearTimeout(setTimeoutId)
+  }
   }, [dispatch, isLoggedIn])
 
   return (

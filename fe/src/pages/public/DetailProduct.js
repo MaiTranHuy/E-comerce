@@ -27,11 +27,16 @@ const DetailProduct = () => {
   const { pid, title, category } = useParams()
   const [product, setProduct] = useState(null)
   const [quantity, setQuantity] = useState(1)
+  const [currentImage, setCurrentImage] = useState(null)
   const [relatedProducts, setRelatedProducts] = useState(null)
+  const [update, setUpdate] = useState(false)
 
   const fetchProductData = async () => {
     const response = await apiGetProduct(pid)
-    if (response.success) setProduct(response.data.data)
+    if (response.success) {
+      setProduct(response.data.data)
+      setCurrentImage(response.data?.data?.images[0])
+    }
   }
 
   const fetchProducts = async () => {
@@ -44,7 +49,18 @@ const DetailProduct = () => {
       fetchProductData()
       fetchProducts()
     }
+    window.scroll(0, 0)
   }, [pid])
+
+  useEffect(() => {
+    if (pid) {
+      fetchProductData()
+    }
+  }, [update])
+
+  const rerender = useCallback(() => { 
+    setUpdate(!update)
+   })
 
   const handleQuantity = useCallback(
     (number) => {
@@ -62,6 +78,11 @@ const DetailProduct = () => {
     if (flag === 'plus') setQuantity((prev) => +prev + 1)
   })
 
+  const handleClickImage = (e, el) => {
+    e.stopPropagation()
+    setCurrentImage(el)
+  }
+
   return (
     <div className="w-full">
       <div className="h-[81px] flex justify-center items-center  bg-gray-100">
@@ -74,15 +95,15 @@ const DetailProduct = () => {
         <div className="w-2/5 flex flex-col gap-2">
           <div>
             <ReactImageMagnify
-              className="h-[458px] w-[458px]"
+              className="h-[458px] w-[458px] border overflow-hidden"
               {...{
                 smallImage: {
                   alt: 'Wristwatch by Ted Baker London',
                   isFluidWidth: true,
-                  src: product?.images[0] // dung 2 anh 1200 va 687
+                  src: currentImage // dung 2 anh 1200 va 687
                 },
                 largeImage: {
-                  src: product?.images[0],
+                  src: currentImage,
                   width: 1000,
                   height: 1000
                 }
@@ -95,9 +116,10 @@ const DetailProduct = () => {
                 <div key={el} className="flex w-full justify-between">
                   {' '}
                   <img
+                    onClick={(e) => handleClickImage(e, el)}
                     src={el}
                     alt="sub"
-                    className="h-[143px] w-[143px] object-cover border"
+                    className="h-[143px] w-[143px] cursor-pointer object-cover border"
                   />
                 </div>
               ))}
@@ -120,7 +142,7 @@ const DetailProduct = () => {
                 <span key={index}>{el}</span>
               ))}{' '}
             </div>
-            <span> {product?.ratings.length} </span>
+            <span>({product?.ratings.length} đánh giá) </span>
             <span className="text-main"> (Đã bán {product?.sold})</span>
           </div>
           <div className="mt-4 text-sm text-gray-500 ">
@@ -156,7 +178,13 @@ const DetailProduct = () => {
         </div>
       </div>
       <div className="w-main m-auto mt-8">
-        <ProductInformation />
+        <ProductInformation
+          nameProduct={product?.title}
+          totalRatings={product?.totalRatings}
+          ratings={product?.ratings}
+          pid={product?._id}
+          rerender={rerender}
+        />
       </div>
       <div className="w-main m-auto my-8">
         <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">

@@ -1,7 +1,7 @@
 import React from 'react'
-import { formatMoney, renderStars } from '../utils/helpers'
+import { formatMoney, renderStars } from '../../utils/helpers'
 import { Link } from 'react-router-dom'
-import path from '../utils/path'
+import path from '../../utils/path'
 
 function ProductCard({ productData }) {
   return (

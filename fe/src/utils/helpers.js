@@ -14,8 +14,7 @@ export const formatMoney = (number) =>
 const { AiFillStar, AiOutlineStar } = icons
 export const renderStars = (number, size = 16) => {
   let roundedNumber = Math.round(number)
-  roundedNumber = Math.min(5, Math.max(1, roundedNumber))
-  if (!Number(roundedNumber)) return
+  roundedNumber = Math.min(5, Math.max(0, roundedNumber))
   const stars = []
   for (let i = 0; i < +roundedNumber; i++)
     stars.push(<AiFillStar size={size} color="orange" />)
@@ -36,4 +35,9 @@ export const validate = (payload, setInvalidFields) => {
   }
 
   return invalids
+}
+
+export const generateRange = (start, end) => {
+  const length = end +1 - start
+  return Array.from({length},(_,index)=> start+index)
 }

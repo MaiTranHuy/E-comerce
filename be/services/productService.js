@@ -40,18 +40,14 @@ const getProductService = asyncHandler(async (userData) => {
 
 const getAllProductService = asyncHandler(async (userData) => {
   const { optionQuery, formatQueries } = userData;
+
+  let colorQueryObj = {};
+
   if (formatQueries?.title)
     formatQueries.title = {
       $regex: `.*${formatQueries.title}.*`,
       $options: "i",
     };
-
-    if (formatQueries?.color)
-    formatQueries.color = {
-      $regex: `.*${formatQueries.color}.*`,
-      $options: "i",
-    };
-
   if (formatQueries?.category) {
     const categoryFilter = {
       title: { $regex: `.*${formatQueries.category}.*`, $options: "i" },
@@ -59,8 +55,19 @@ const getAllProductService = asyncHandler(async (userData) => {
     const category = await productCategory.findOne(categoryFilter);
     formatQueries.category = category._id;
   }
+  if (formatQueries?.color) {
+    const colorArr = formatQueries.color?.split(",");
+    delete formatQueries.color;
 
-  let queryCommand = Product.find(formatQueries).populate(
+    const colorQuery = colorArr.map((el) => ({
+      color: { $regex: `.*${el}.*`, $options: "i" },
+    }));
+    colorQueryObj = { $and: colorQuery };
+  }
+
+  const q = { ...colorQueryObj, ...formatQueries };
+
+  let queryCommand = Product.find(q).populate(
     "category brand",
     "title"
   );
@@ -73,11 +80,11 @@ const getAllProductService = asyncHandler(async (userData) => {
     queryCommand = queryCommand.select(fields);
   }
   const page = +optionQuery.page || 1;
-  const limit = +optionQuery.limit || 5;
+  const limit = +optionQuery.limit || 8;
   const skip = (page - 1) * limit;
   queryCommand.skip(skip).limit(limit);
   const product = await queryCommand.exec();
-  const counts = await Product.countDocuments(formatQueries);
+  const counts = await Product.countDocuments(q);
   if (!product)
     return {
       success: false,
@@ -157,6 +164,7 @@ const ratingProductService = asyncHandler(async (userData) => {
         $set: {
           "ratings.$.star": updateField.star,
           "ratings.$.comment": updateField.comment,
+          "ratings.$.updatedAt": Date.now(),
         },
       },
       { new: true }
@@ -169,6 +177,7 @@ const ratingProductService = asyncHandler(async (userData) => {
           ratings: {
             star: updateField.star,
             comment: updateField.comment,
+            updatedAt: Date.now(),
             postedBy: _id,
           },
         },

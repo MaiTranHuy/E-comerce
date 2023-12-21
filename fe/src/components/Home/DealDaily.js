@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import icons from '../utils/icons'
-import { apiGetProducts } from '../apis/product'
-import { formatMoney, renderStars } from '../utils/helpers'
+import icons from '../../utils/icons'
+import { apiGetProducts } from '../../apis/product'
+import { formatMoney, renderStars } from '../../utils/helpers'
 import CountDown from './CountDown'
 import { Link } from 'react-router-dom'
-import path from '../utils/path'
+import path from '../../utils/path'
 
 const { AiFillStar, AiOutlineMenu } = icons
 let idInterval
