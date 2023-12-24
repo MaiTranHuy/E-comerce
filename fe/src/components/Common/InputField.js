@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 const InputField = ({
   value,
@@ -20,7 +20,7 @@ const InputField = ({
       )}
       <input
         type={type}
-        className="px-4 py-2 rounded-sm border w-full mt-2 outline-none placeholder:text-sm placeholder:italic outline-none"
+        className="px-4 py-2 rounded-sm border w-full mt-2 outline-none placeholder:text-sm placeholder:italic placeholder:outline-none"
         placeholder={nameKey}
         value={value}
         onChange={(e) =>
@@ -36,4 +36,4 @@ const InputField = ({
   )
 }
 
-export default InputField
+export default memo(InputField)

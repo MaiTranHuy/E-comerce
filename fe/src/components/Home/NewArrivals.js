@@ -1,5 +1,5 @@
-import React from 'react'
-import CustomSlider from '../CustomSlider'
+import React, { memo } from 'react'
+import CustomSlider from '../Common/CustomSlider'
 import {  useSelector } from 'react-redux'
 
 function NewArrivals() {
@@ -16,4 +16,4 @@ function NewArrivals() {
   )
 }
 
-export default NewArrivals
+export default memo(NewArrivals)

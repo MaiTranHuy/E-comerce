@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import icons from '../../utils/icons'
 import { apiGetProducts } from '../../apis/product'
 import { formatMoney, renderStars } from '../../utils/helpers'
@@ -22,6 +22,7 @@ const DealDaily = () => {
       totalRatings: 5
     })
     if (response.success) {
+      console.log(response)
       setDealDaily(response.data.data.product[0])
       const h = 24 - new Date().getHours()
       const m = 60 - new Date().getMinutes()
@@ -74,7 +75,9 @@ const DealDaily = () => {
         <span className="flex-1"></span>
       </div>
       <Link
-        to={`/${path.DETAIL_PRODUCT}/${dealDaily?._id}/${dealDaily?.title}`}
+        to={`/${dealDaily?.category?.title?.toLowerCase()}/${dealDaily?._id}/${
+          dealDaily?.title
+        }`}
         className="w-full flex flex-col items-center pt-8 px-4 gap-2"
       >
         <img
@@ -111,4 +114,4 @@ const DealDaily = () => {
   )
 }
 
-export default DealDaily
+export default memo(DealDaily)

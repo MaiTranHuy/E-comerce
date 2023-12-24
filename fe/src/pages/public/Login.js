@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import InputField from '../../components/InputField'
-import Button from '../../components/Button'
+import InputField from '../../components/Common/InputField'
+import Button from '../../components/Common/Button'
 import { apiRegister, apiLogin, apiForgotPassword } from '../../apis/user'
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom'
@@ -10,6 +10,8 @@ import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { validate } from '../../utils/helpers'
 import { Link } from 'react-router-dom'
+import { showModal } from 'store/app/appSlice'
+import { Loading } from 'components'
 
 
 const Login = () => {
@@ -56,7 +58,9 @@ const Login = () => {
     const { firstName, lastName, phoneNumber, ...data } = payload
       
     if (isRegister) {
+      dispatch(showModal({isShowModal: true, modalChildren: <Loading/>}))
       const response = await apiRegister(payload)
+      dispatch(showModal({isShowModal: false, modalChildren: null}))
       if (response.success)
         Swal.fire('Chuc mung', response.message, 'success').then(() => {
           setIsRegister(false)

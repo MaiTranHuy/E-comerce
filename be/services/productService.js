@@ -40,9 +40,7 @@ const getProductService = asyncHandler(async (userData) => {
 
 const getAllProductService = asyncHandler(async (userData) => {
   const { optionQuery, formatQueries } = userData;
-
   let colorQueryObj = {};
-
   if (formatQueries?.title)
     formatQueries.title = {
       $regex: `.*${formatQueries.title}.*`,
@@ -58,15 +56,12 @@ const getAllProductService = asyncHandler(async (userData) => {
   if (formatQueries?.color) {
     const colorArr = formatQueries.color?.split(",");
     delete formatQueries.color;
-
     const colorQuery = colorArr.map((el) => ({
       color: { $regex: `.*${el}.*`, $options: "i" },
     }));
     colorQueryObj = { $and: colorQuery };
   }
-
   const q = { ...colorQueryObj, ...formatQueries };
-
   let queryCommand = Product.find(q).populate(
     "category brand",
     "title"

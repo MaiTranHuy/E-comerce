@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { formatMoney, renderStars } from '../../utils/helpers'
 import { Link } from 'react-router-dom'
-import path from '../../utils/path'
 
 function ProductCard({ productData }) {
   return (
     <div className="w-1/3 flex-auto px-[10px] mb-[20px]">
       <Link
-        to={`/${path.DETAIL_PRODUCT}/${productData?._id}/${productData?.title}`}
+         to={`/${productData?.category?.title?.toLowerCase()}/${productData?._id}/${
+          productData?.title
+        }`}
         className=" flex border w-full"
       >
         <img
@@ -35,4 +36,4 @@ function ProductCard({ productData }) {
   )
 }
 
-export default ProductCard
+export default memo(ProductCard)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 function SelectOption({ icon }) {
   return (
@@ -8,4 +8,4 @@ function SelectOption({ icon }) {
   )
 }
 
-export default SelectOption
+export default memo(SelectOption)

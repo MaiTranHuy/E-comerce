@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { apiGetProducts } from '../../apis/product'
 import ProductCard from './ProductCard'
 
@@ -64,4 +64,4 @@ const FeatureProducts = () => {
   )
 }
 
-export default FeatureProducts
+export default memo(FeatureProducts)

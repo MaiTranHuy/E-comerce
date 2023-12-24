@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { formatMoney, renderStars } from '../utils/helpers'
-import label from '../assets/label.webp'
-import labelBlue from '../assets/label-blue.webp'
+import React, { memo, useState } from 'react'
+import { formatMoney, renderStars } from '../../utils/helpers'
+import label from '../../assets/label.webp'
+import labelBlue from '../../assets/label-blue.webp'
 import SelectOption from './SelectOption'
-import icons from '../utils/icons'
+import icons from '../../utils/icons'
 import { Link } from 'react-router-dom'
 
 const { AiFillEye, AiOutlineMenu, BsFillSuitHeartFill } = icons
@@ -67,4 +67,4 @@ const Product = ({ productData, isNew, normal = true }) => {
   )
 }
 
-export default Product
+export default memo(Product)

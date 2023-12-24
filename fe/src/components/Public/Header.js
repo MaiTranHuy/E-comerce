@@ -1,11 +1,17 @@
-import React from 'react'
+import React, { Fragment, memo } from 'react'
 import logo from '../../assets/logo.png'
 import icons from '../../utils/icons'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import path from '../../utils/path'
-
+import { jwtDecode } from 'jwt-decode'
 const Header = () => {
   const { RiPhoneFill, MdEmail, BsHandbagFill, FaUserCircle } = icons
+
+  const { token } = useSelector((state) => state.user)
+  const decodedToken = typeof token === 'string' ? jwtDecode(token) : null
+  const userRole = decodedToken?.role
+
   return (
     <div className="flex justify-between w-main h-[110px] py-[35px]">
       <Link to={`/${path.HOME}`}>
@@ -26,16 +32,28 @@ const Header = () => {
           </span>
           <span>Online Support 24/7</span>
         </div>
-        <div className="flex items-center justify-center px-6 border-r gap-2">
-          <BsHandbagFill color="red" />
-          <span>0 item(s)</span>
-        </div>
-        <div className="flex justify-center items-center px-6">
-          <FaUserCircle size={24} />
-        </div>
+        {token && (
+          <Fragment>
+            <div className="flex items-center justify-center px-6 border-r gap-2">
+              <BsHandbagFill color="red" />
+              <span>0 item(s)</span>
+            </div>
+            <Link
+              to={
+                userRole === 'admin'
+                  ? `/${path.ADMIN}/${path.DASHBOARD}`
+                  : `/${path.MEMBER}/${path.PERSONAL}`
+              }
+              className="flex justify-center items-center px-6"
+            >
+              <FaUserCircle size={24} />
+              <span>Profile</span>
+            </Link>
+          </Fragment>
+        )}
       </div>
     </div>
   )
 }
 
-export default Header
+export default memo(Header)

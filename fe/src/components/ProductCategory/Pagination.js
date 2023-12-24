@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { memo } from 'react'
 import usePagination from '../../hooks/usePagination'
 import PaginationItem from './PaginationItem'
 import { useSearchParams } from 'react-router-dom'
@@ -37,4 +37,4 @@ const Pagination = ({ totalCount, currentPage }) => {
   )
 }
 
-export default Pagination
+export default memo(Pagination)

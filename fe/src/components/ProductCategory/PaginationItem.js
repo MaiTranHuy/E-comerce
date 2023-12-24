@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { memo } from 'react'
 import clsx from 'clsx'
 import { useNavigate, useSearchParams,useParams, createSearchParams } from 'react-router-dom'
 const PaginationItem = ({ children }) => {
@@ -34,4 +34,4 @@ const PaginationItem = ({ children }) => {
   )
 }
 
-export default PaginationItem
+export default memo(PaginationItem)
