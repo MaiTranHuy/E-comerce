@@ -3,16 +3,25 @@ import {userService} from "../services/indexService.js";
 import asyncHandler from "express-async-handler";
 
 const getAllUsersController = asyncHandler(async (req, res) => {
-  const listUsers = await userService.getAllUserService()
-  if (!listUsers.success)
+  const { page = 1, sort, limit, fields, ...inputQueries } = req.query;
+  const optionQuery = { page, sort, limit, fields }
+  let queryString = JSON.stringify(inputQueries);
+  queryString = queryString.replace(
+    /\b(gte|gt|lte|lt)\b/g,
+    (match) => `$${match}`
+  );
+  const formatQueries = JSON.parse(queryString);
+  const userData = { optionQuery, formatQueries };
+  const user = await userService.getAllUserService(userData)
+  if (!user.success)
     return res.status(400).json({
       success: false,
-      message: listUsers.message,
+      message: user.message,
     });
-  return res.status(200).json({
+  return res.status(201).json({
     success: true,
-    message: "Get all users successfully!",
-    data: listUsers.data,
+    message: "Get users successfully!",
+    data: user,
   });
 });
 

@@ -5,34 +5,39 @@ export const apiRegister = (data) =>
     url: '/account/register',
     method: 'post',
     data,
-    withCredentials:true
+    withCredentials: true
   })
 
-  
 export const apiLogin = (data) =>
-axios({
-  url: '/account/login',
-  method: 'post',
-  data
-})
+  axios({
+    url: '/account/login',
+    method: 'post',
+    data
+  })
 
 export const apiForgotPassword = (data) =>
-axios({
-  url: '/account/forgotpassword',
-  method: 'post',
-  data
-})
+  axios({
+    url: '/account/forgotpassword',
+    method: 'post',
+    data
+  })
 
 export const apiResetPassword = (data) =>
-axios({
-  url: '/account/resetpassword',
-  method: 'put',
-  data
-})
+  axios({
+    url: '/account/resetpassword',
+    method: 'put',
+    data
+  })
 
 export const apiGetCurrent = () =>
-axios({
-  url: '/users/current',
-  method: 'get',
-  
-})
+  axios({
+    url: '/users/current',
+    method: 'get'
+  })
+
+  export const apiGetUsers = (params) =>
+  axios({
+    url: '/users/',
+    method: 'get',
+    params
+  })
