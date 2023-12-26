@@ -11,7 +11,7 @@ router.put('/address',verifyToken.verifyAccessToken,userController.updateUserAdd
 
 router.put('/cart',verifyToken.verifyAccessToken,userController.updateCart)
 
-router.delete('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],userController.deleteUserController)
+router.delete('/:uid',[verifyToken.verifyAccessToken,verifyToken.isAdmin],userController.deleteUserController)
 
 router.put('/:uid',[verifyToken.verifyAccessToken,verifyToken.isAdmin],userController.updateUserByAdminController)
 

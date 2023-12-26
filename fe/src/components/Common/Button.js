@@ -1,9 +1,9 @@
 import React, { memo } from 'react'
 
-const Button = ({ name, handleOnclick, style, iconBefore, iconAfter, fw }) => {
+const Button = ({ name, handleOnclick, style, iconBefore, iconAfter, fw,type = 'button' }) => {
   return (
     <button
-      type="button"
+      type={type}
       className={
         style
           ? style

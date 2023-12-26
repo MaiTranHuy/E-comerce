@@ -46,13 +46,13 @@ const getCurrentUserController = asyncHandler(async (req, res) => {
 });
 
 const deleteUserController = asyncHandler(async (req, res) => {
-  const { _id } = req.query;
-  if (!_id)
+  const { uid } = req.params;
+  if (!uid)
     return res.status(400).json({
       success: false,
       message: "Missing input!",
     });
-  const user = await userService.deleteUserController(_id);
+  const user = await userService.deleteUserController(uid);
   if (!user.success)
     return res.status(400).json({
       success: false,
@@ -104,7 +104,7 @@ const updateUserByAdminController = asyncHandler(async (req, res) => {
     });
   return res.status(200).json({
     success: true,
-    message: "Update current user successfully!",
+    message: "Update User by admin successfully!",
     data: user.data,
   });
 });
