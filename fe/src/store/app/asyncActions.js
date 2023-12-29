@@ -10,3 +10,13 @@ export const getCategories = createAsyncThunk(
     return response.data.data
   }
 );
+
+export const getBrands = createAsyncThunk(
+  "app/brands",
+  async (data, { rejectWithValue }) => {
+    const response = await apis.apiGetBrands()
+    if(!response.status === "OK") 
+        return rejectWithValue(response)
+    return response.data.data
+  }
+);

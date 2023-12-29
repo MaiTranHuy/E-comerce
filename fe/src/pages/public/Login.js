@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import InputField from '../../components/Common/InputField'
-import Button from '../../components/Common/Button'
+import InputField from '../../components/inputs/InputField'
+import Button from '../../components/common/Button'
 import { apiRegister, apiLogin, apiForgotPassword } from '../../apis/user'
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom'
@@ -130,6 +130,7 @@ const Login = () => {
                   nameKey="firstName"
                   invalidFields={inValidFields}
                   setInvalidField={setInValidFields}
+                  fullWidth
                 />
                 <InputField
                   value={payload.lastName}
@@ -137,6 +138,7 @@ const Login = () => {
                   nameKey="lastName"
                   invalidFields={inValidFields}
                   setInvalidField={setInValidFields}
+                  fullWidth
                 />
               </div>
               <InputField

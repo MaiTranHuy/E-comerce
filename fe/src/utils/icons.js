@@ -1,4 +1,4 @@
-import { RiPhoneFill, RiTruckFill,RiBillLine } from 'react-icons/ri'
+import { RiPhoneFill, RiTruckFill,RiBillLine,RiDeleteBin2Fill } from 'react-icons/ri'
 import { MdEmail, MdGroups } from 'react-icons/md'
 import {
   BsHandbagFill,
@@ -48,7 +48,8 @@ const icons = {
   TbBrandProducthunt,
   RiBillLine,
   AiOutlineCaretDown,
-  AiOutlineCaretRight
+  AiOutlineCaretRight,
+  RiDeleteBin2Fill
 }
 
 export default icons

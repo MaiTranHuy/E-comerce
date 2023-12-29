@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import CustomSlider from '../Common/CustomSlider'
+import CustomSlider from '../common/CustomSlider'
 import {  useSelector } from 'react-redux'
 
 function NewArrivals() {

@@ -22,10 +22,12 @@ const Pagination = ({ totalCount }) => {
           {totalCount}{' '}
         </span>
       )}
-      {+params.get('page') && (
+      {+params.get('page') ? (
         <span className="text-sm italic">
           Show product {range()} of {totalCount}{' '}
         </span>
+      ) : (
+        ''
       )}
       <div className="flex items-center">
         {pagination?.map((el) => (

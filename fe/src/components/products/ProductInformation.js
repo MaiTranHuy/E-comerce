@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useState } from 'react'
 import { productInfoTabs } from '../../utils/constants'
-import { VoteBar, Button, VoteOption, Comment } from '../../components'
+import { VoteBar, Button, VoteOption, Comment } from '..'
 import { renderStars } from '../../utils/helpers'
 import { apiRatings } from '../../apis'
 import { useDispatch, useSelector } from 'react-redux'

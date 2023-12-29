@@ -5,6 +5,7 @@ export const appSlice = createSlice({
   name: 'app',
   initialState: {
     categories: null,
+    brands:null,
     isLoading: false,
     isShowModal: false,
     modalChildren: null
@@ -29,6 +30,21 @@ export const appSlice = createSlice({
       state.isLoading = false
       state.errorMessage = action.payload.message
     })
+
+    builder.addCase(actions.getBrands.pending, (state) => {
+      state.isLoading = true
+    })
+
+    builder.addCase(actions.getBrands.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.brands = action.payload
+    })
+
+    builder.addCase(actions.getBrands.rejected, (state, action) => {
+      state.isLoading = false
+      state.errorMessage = action.payload.message
+    })
+
   }
 })
 

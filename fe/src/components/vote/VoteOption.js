@@ -2,7 +2,7 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import logo from '../../assets/logo.png'
 import { voteOptions } from '../../utils/constants'
 import { AiFillStar } from 'react-icons/ai'
-import { Button } from '../../components'
+import { Button } from '..'
 
 const VoteOption = ({ nameProduct, handleSubmitVote }) => {
   const [markScore, setMarkScore] = useState(null)

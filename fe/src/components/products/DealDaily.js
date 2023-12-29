@@ -2,9 +2,8 @@ import React, { memo, useEffect, useState } from 'react'
 import icons from '../../utils/icons'
 import { apiGetProducts } from '../../apis/product'
 import { formatMoney, renderStars } from '../../utils/helpers'
-import CountDown from './CountDown'
+import CountDown from '../common/CountDown'
 import { Link } from 'react-router-dom'
-import path from '../../utils/path'
 
 const { AiFillStar, AiOutlineMenu } = icons
 let idInterval
@@ -22,7 +21,6 @@ const DealDaily = () => {
       totalRatings: 5
     })
     if (response.success) {
-      console.log(response)
       setDealDaily(response.data.data.product[0])
       const h = 24 - new Date().getHours()
       const m = 60 - new Date().getMinutes()

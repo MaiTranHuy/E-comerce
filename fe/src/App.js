@@ -13,7 +13,7 @@ import {
   ResetPassword
 } from './pages/public'
 import path from './utils/path'
-import { getCategories } from './store/app/asyncActions'
+import { getCategories,getBrands } from './store/app/asyncActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -33,6 +33,7 @@ function App() {
   const { isShowModal, modalChildren } = useSelector((state) => state.app)
   useEffect(() => {
     dispatch(getCategories())
+    dispatch(getBrands())
   }, [dispatch])
 
   return (

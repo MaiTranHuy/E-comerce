@@ -7,12 +7,15 @@ import { useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
+import { blockStatus, roles } from 'utils/constants'
+import clsx from 'clsx'
 
 const ManageUser = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm({
     email: '',
     firstName: '',
@@ -60,25 +63,38 @@ const ManageUser = () => {
     } else toast.error(response.message)
   }
 
-  const handleDelete =  (uid) => {
+  const handleDelete = (uid) => {
     Swal.fire({
-      title:'Are you sure you want to delete?',
-      text:'Are you ready to remove user',
-      showCancelButton:true
+      title: 'Are you sure you want to delete?',
+      text: 'Are you ready to remove user',
+      showCancelButton: true
     }).then(async (res) => {
-      if(res.isConfirmed) {
+      if (res.isConfirmed) {
         const response = await apiDeleteUserByAdmin(uid)
         if (response.success) {
           render()
           toast.success(response.message)
         } else toast.error(response.message)
       }
-    } )
-   
+    })
   }
 
+  useEffect(() => {
+    if (editElement) {
+      reset({
+        role: editElement.role,
+        isBlocked: editElement.isBlocked
+      })
+    } else {
+      reset({
+        role: '',
+        isBlocked: ''
+      })
+    }
+  }, [editElement, reset])
+
   return (
-    <div className="w-full pl-8">
+    <div className={clsx("w-full pl-8",editElement && 'pl-16')}>
       <h1 className="h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b">
         <span>Manage User</span>
       </h1>
@@ -183,16 +199,32 @@ const ManageUser = () => {
                   </td>
                   <td className="py-2 px-4">
                     {editElement?._id === el._id ? (
-                      <Select />
+                      <Select
+                        register={register}
+                        fullWidth
+                        errors={errors}
+                        defaultValue={editElement?.role}
+                        id={'role'}
+                        validate={{ required: 'Require fill' }}
+                        options={roles}
+                      />
                     ) : (
                       <span>{el.role}</span>
                     )}
                   </td>
                   <td className="py-2 px-4">
                     {editElement?._id === el._id ? (
-                      <Select />
+                      <Select
+                        register={register}
+                        fullWidth
+                        errors={errors}
+                        defaultValue={editElement?.isBlocked}
+                        id={'isBlocked'}
+                        validate={{ required: 'Require fill' }}
+                        options={blockStatus}
+                      />
                     ) : (
-                      <span>{!el.isBlocked ? 'Active' : 'Block'}</span>
+                      <span>{el.isBlocked ? 'Blocked' : 'Active'}</span>
                     )}
                   </td>
                   <td className="py-2 px-4">
@@ -216,8 +248,9 @@ const ManageUser = () => {
                       </span>
                     )}
                     <span
-                    onClick={() => handleDelete(el._id)}
-                    className="px-2 text-orange-600 hover:underline cursor-pointer">
+                      onClick={() => handleDelete(el._id)}
+                      className="px-2 text-orange-600 hover:underline cursor-pointer"
+                    >
                       Delete
                     </span>
                   </td>
