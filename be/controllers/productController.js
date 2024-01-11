@@ -5,11 +5,13 @@ import slugify from "slugify";
 
 const createProductController = asyncHandler(async (req, res) => {
   const { title, description, price, brand, category } = req.body;
-  if (!title || !description || !price || !brand || !category)
+  const imageData = req?.files?.map(el => el.path)
+  if (!title || !description || !price || !brand || !category ||!imageData)
     return res.status(400).json({
       success: false,
       message: "Missing input!",
     });
+    req.body.images = imageData;
   const newProduct = await productService.createProductService(req.body);
   if (!newProduct.success)
     return res.status(400).json({

@@ -6,7 +6,7 @@ import uploadCloud from '../config/cloudinaryConfig.js'
 
 const router = express.Router();
 
-router.post('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],productController.createProductController)
+router.post('/',[verifyToken.verifyAccessToken,verifyToken.isAdmin],uploadCloud.array('images',10),productController.createProductController)
 
 router.get('/',productController.getAllProductController)
 

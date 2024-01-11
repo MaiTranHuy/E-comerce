@@ -62,10 +62,7 @@ const getAllProductService = asyncHandler(async (userData) => {
     colorQueryObj = { $and: colorQuery };
   }
   const q = { ...colorQueryObj, ...formatQueries };
-  let queryCommand = Product.find(q).populate(
-    "category brand",
-    "title"
-  );
+  let queryCommand = Product.find(q).populate("category brand", "title");
   if (optionQuery.sort) {
     const sortBy = optionQuery.sort.split(",").join(" ");
     queryCommand = queryCommand.sort(sortBy);

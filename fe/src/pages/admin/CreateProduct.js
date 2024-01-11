@@ -1,8 +1,7 @@
+import { apiCreateProduct } from 'apis'
 import { Button, InputForm, MarkdownEditor, Select } from 'components'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { IoIosTrash } from 'react-icons/io'
-import { RiDeleteBin2Fill } from 'react-icons/ri'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { getBase64 } from 'utils/helpers'
@@ -46,24 +45,19 @@ const CreateProduct = () => {
     setPreview(imagesPreview)
   }
 
-  // const handleRemoveImage = async (name) => {
-  //   const files = [...watch('images')]
-  //   reset({
-  //     images: files?.filter(el => el.name !== name)
-  //   })
-  //   if(preview?.some(el => el.name === name))
-  //   setPreview(prev => prev?.filter(el => el.name !==name))
-  // }
-
   useEffect(() => {
     handlePreview(watch('images'))
   }, [watch('images')])
 
-  const handleCreateProduct = (data) => {
+  const handleCreateProduct = async (data) => {
     const final = { ...data, ...payload }
     const formData = new FormData()
     for (let i of Object.entries(final)) formData.append(i[0], i[1])
-    console.log(final)
+  if(final.images) {
+    for(let image of final.images)
+    formData.append('images',image)
+  }
+    const response = await apiCreateProduct(formData)
   }
   return (
     <div className="w-full">
@@ -71,7 +65,7 @@ const CreateProduct = () => {
         <span>Create new product</span>
       </h1>
       <div className="p-4 ">
-        <form onSubmit={handleSubmit(handleCreateProduct)}>
+        <form enctype="multipart/form-data" onSubmit={handleSubmit(handleCreateProduct)}>
           <InputForm
             label="Name product"
             register={register}
@@ -168,11 +162,6 @@ const CreateProduct = () => {
                       src={el.path}
                       alt="product"
                     />
-                    {/* {hoverElement === el.name && (
-                      <div
-                      onClick={() => handleRemoveImage(el.name)}
-                      className="absolute cursor-pointer inset-0 bg-overlay flex items-center justify-center"> <RiDeleteBin2Fill size={24} color='white'/> </div>
-                    )} */}
                   </div>
                 ))}
               </div>

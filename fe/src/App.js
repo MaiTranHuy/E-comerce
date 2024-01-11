@@ -69,6 +69,7 @@ function App() {
         <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
         <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />
       </Routes>
+      
       <ToastContainer
         position="top-right"
         autoClose={5000}
